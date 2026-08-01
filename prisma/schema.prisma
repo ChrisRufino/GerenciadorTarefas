@@ -11,3 +11,40 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+enum userRole {
+
+  administrator
+  member
+
+}
+
+enum status {
+  pending
+  making
+  completed
+}
+
+enum priority {
+  high
+  low
+  average
+
+}
+
+
+model users {
+
+id Int @id @default(autoincrement())
+name String @db.VarChar(100)
+email String @db.VarChar(150) @unique
+password String @db.VarChar(255)
+
+role userRole @default(member)
+
+
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime? @updatedAt @map("updated_at")
+
+}

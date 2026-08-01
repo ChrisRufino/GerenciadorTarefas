@@ -1,13 +1,14 @@
 {
   "name": "gerenciadortarefas",
   "version": "1.0.0",
-  "description": "",
+  "description": "API para um sistema de Gerenciamento de Tarefas com Node.js. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch --env-file .env src/server.ts",
+    "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll --runInBand"
   },
   "keywords": [],
-  "author": "",
+  "author": "Christian Rufino",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -24,6 +25,7 @@
     "@types/supertest": "^6.0.2",
     "jest": "^30.4.2",
     "supertest": "^7.0.0",
+    "tsx": "^4.23.1",
     "typescript": "^7.0.2"
   }
 }

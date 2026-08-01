@@ -42,8 +42,63 @@ password String @db.VarChar(255)
 
 role userRole @default(member)
 
+teamUsers team_members[]
+tasksId tasks[]
 
 createdAt DateTime @default(now()) @map("created_at")
 updatedAt DateTime? @updatedAt @map("updated_at")
 
+@@map("users")
+}
+
+
+model teams {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  description String
+
+  teamMembers team_members[]
+  tasksId tasks[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+
+  @@map("teams")
+}
+
+model team_members {
+  id Int @id @default(autoincrement())
+  userId Int @map("user_id")
+  teamId Int @map("team_id")
+
+  user   users @relation(fields: [userId], references: [id])
+  team   teams @relation(fields: [teamId], references: [id])
+
+  @@map("team_members")
+
+  
+}
+
+model tasks {
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(200)
+  description String
+  status String
+  priority String
+
+  assignedTo Int @map("assigned_to")
+  teamId Int @map("team_id")
+
+  team teams @relation(fields: [teamId], references: [id])
+  user   users @relation(fields: [assignedTo], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("tasks")
+}
+
+model tasks_history {
+  id Int @id @default(autoincrement())
 }

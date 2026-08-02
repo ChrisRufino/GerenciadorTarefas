@@ -44,6 +44,7 @@ role userRole @default(member)
 
 teamUsers team_members[]
 tasksId tasks[]
+changedBy tasks_history[]
 
 createdAt DateTime @default(now()) @map("created_at")
 updatedAt DateTime? @updatedAt @map("updated_at")
@@ -84,8 +85,8 @@ model tasks {
   id Int @id @default(autoincrement())
   title String @db.VarChar(200)
   description String
-  status String
-  priority String
+  status status @default(pending)
+  priority priority @default(average)
 
   assignedTo Int @map("assigned_to")
   teamId Int @map("team_id")
@@ -96,9 +97,22 @@ model tasks {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
+   tasksId tasks_history[]
+
   @@map("tasks")
 }
 
 model tasks_history {
   id Int @id @default(autoincrement())
+  taskId Int @map("task_id")
+  changedBy Int @map("changed_by")
+  oldStatus status @map("old_status")
+  newStatus status @map("new_status")
+
+
+  taks tasks @relation(fields: [taskId],references: [id])
+  change users @relation(fields: [changedBy], references: [id])
+
+  changedAt DateTime @default(now()) @map("changed_at")
+
 }

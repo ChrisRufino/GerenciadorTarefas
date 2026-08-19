@@ -33,7 +33,7 @@ class TasksController {
       },
     });
 
-    return response.json({ message: "ok" }); // colocar tasks quand
+    return response.json({ message: tasks }); // colocar tasks quand
   }
 }
 

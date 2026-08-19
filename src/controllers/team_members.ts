@@ -1,34 +1,39 @@
 import { prisma } from "@/database/prisma";
-import { AppError } from "@/utils/AppError";
 import { Request, Response } from "express";
 import { z } from "zod";
 
-class TeamMembers {
+class teamsMember {
   async create(request: Request, response: Response) {
     const bodySchema = z.object({
-      name: z.string(),
-      description: z.string(),
+      userId: z.int(),
+      teamId: z.int(),
     });
 
-    const { name, description } = bodySchema.parse(request.body);
+    const { userId, teamId } = bodySchema.parse(request.body);
 
-    const sameName = await prisma.teams.findUnique({
-      where: {
-        name,
-      },
-    });
-
-    if (sameName) {
-      throw new AppError("Teams already in use", 409);
-    }
-
-    const teams = await prisma.teams.create({
+    const membersTeam = await prisma.team_members.create({
       data: {
-        name,
-        description,
+        userId,
+        teamId,
       },
     });
 
-    return response.status(201).json(teams);
+    return response.status(201).json(membersTeam);
+  }
+
+  async delete(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.coerce.number().int(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    await prisma.team_members.delete({
+      where: { id },
+    });
+
+    return response.status(204).json();
   }
 }
+
+export { teamsMember };

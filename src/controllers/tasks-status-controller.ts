@@ -5,7 +5,7 @@ import { z } from "zod";
 class TasksStatusController {
   async update(request: Request, response: Response) {
     const paramsSchema = z.object({
-      id: z.int(),
+      id: z.coerce.number().int(),
     });
 
     const bodySchema = z.object({

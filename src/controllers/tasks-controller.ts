@@ -9,9 +9,10 @@ class TasksController {
       team_id: z.int(),
       title: z.string(),
       description: z.string(),
+      priority: z.enum(["high", "low", "average"]),
     });
 
-    const { user_id, description, team_id, title } = bodySchema.parse(
+    const { user_id, description, team_id, title, priority } = bodySchema.parse(
       request.body,
     );
 
@@ -21,6 +22,7 @@ class TasksController {
         teamId: team_id,
         title,
         description,
+        priority,
       },
     });
     return response.status(201).json();

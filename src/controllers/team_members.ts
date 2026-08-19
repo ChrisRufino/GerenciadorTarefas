@@ -34,6 +34,17 @@ class teamsMember {
 
     return response.status(204).json();
   }
+
+  async index(request: Request, response: Response) {
+    const allTeams = await prisma.team_members.findMany({
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        team: { select: { id: true, name: true } },
+      },
+    });
+
+    return response.json({ message: allTeams });
+  }
 }
 
 export { teamsMember };

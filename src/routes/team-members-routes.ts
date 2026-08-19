@@ -12,7 +12,15 @@ membersRoutes.use(
   verifyUserAuthorization(["administrator"]),
 );
 
+const listMembers = Router();
+
+listMembers.use(
+  ensureAuthenticated,
+  verifyUserAuthorization(["administrator", "member"]),
+);
+
 membersRoutes.post("/", memberController.create);
 membersRoutes.delete("/:id", memberController.delete);
+listMembers.get("/", memberController.index);
 
-export { membersRoutes };
+export { listMembers, membersRoutes };

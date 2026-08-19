@@ -16,5 +16,6 @@ tasksRoutes.use(
 tasksRoutes.post("/", tasksController.create);
 tasksRoutes.get("/", tasksController.index);
 tasksRoutes.patch("/:id/status", tasksStatusController.update);
+tasksRoutes.delete("/:id", tasksController.delete);
 
 export { tasksRoutes };

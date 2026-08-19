@@ -37,6 +37,20 @@ class TasksController {
 
     return response.json({ message: tasks }); // colocar tasks quand
   }
+
+  async delete(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.coerce.number().int(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    await prisma.tasks.delete({
+      where: { id },
+    });
+
+    return response.status(204).json("Tasks Deletado");
+  }
 }
 
 export { TasksController };

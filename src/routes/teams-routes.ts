@@ -13,5 +13,7 @@ teamsRoutes.use(
 
 teamsRoutes.post("/", teamController.create);
 teamsRoutes.get("/", teamController.index);
+teamsRoutes.patch("/:id/name", teamController.update);
+teamsRoutes.delete("/:id", teamController.delete);
 
 export { teamsRoutes };

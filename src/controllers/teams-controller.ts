@@ -46,6 +46,44 @@ class teamsController {
 
     return response.json({ message: allTeams });
   }
+
+  async update(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.coerce.number().int(),
+    });
+
+    const bodySchema = z.object({
+      name: z.string(),
+    });
+
+    const { name } = bodySchema.parse(request.body);
+    const { id } = paramsSchema.parse(request.params);
+
+    await prisma.teams.update({
+      data: {
+        name,
+      },
+      where: {
+        id,
+      },
+    });
+
+    return response.json("Modificado");
+  }
+
+  async delete(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.coerce.number().int(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    await prisma.team_members.delete({
+      where: { id },
+    });
+
+    return response.status(204).json("Time Deletado");
+  }
 }
 
 export { teamsController };

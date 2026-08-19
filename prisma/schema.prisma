@@ -24,8 +24,8 @@ model users {
 
 model teams {
   id          Int            @id @default(autoincrement())
-  name        String         @db.VarChar(100)
-  description String
+  name        String         @unique @db.VarChar(100)
+  description String         
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime?      @updatedAt @map("updated_at")
   tasksId     tasks[]

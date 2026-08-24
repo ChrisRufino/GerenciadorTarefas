@@ -1,4 +1,5 @@
 import { prisma } from "@/database/prisma";
+import { AppError } from "@/utils/AppError";
 import { Request, Response } from "express";
 import { z } from "zod";
 
@@ -15,14 +16,30 @@ class TasksStatusController {
     const { id } = paramsSchema.parse(request.params);
     const { status } = bodySchema.parse(request.body);
 
-    await prisma.tasks.update({
-      data: {
-        status,
-      },
-      where: {
-        id,
-      },
-    });
+    const task = await prisma.tasks.findUnique({ where: { id } });
+
+    if (!task) {
+      throw new AppError("Task not found", 404);
+    }
+
+    if (task.status !== status) {
+      const changedBy = Number(request.user?.id);
+
+      await prisma.$transaction([
+        prisma.tasks.update({
+          data: { status },
+          where: { id },
+        }),
+        prisma.tasks_history.create({
+          data: {
+            taskId: id,
+            changedBy,
+            oldStatus: task.status,
+            newStatus: status,
+          },
+        }),
+      ]);
+    }
 
     return response.json();
   }

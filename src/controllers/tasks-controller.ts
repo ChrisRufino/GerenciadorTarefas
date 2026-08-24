@@ -29,13 +29,26 @@ class TasksController {
   }
 
   async index(request: Request, response: Response) {
+    const querySchema = z.object({
+      status: z.enum(["pending", "making", "completed"]).optional(),
+      priority: z.enum(["high", "low", "average"]).optional(),
+    });
+
+    const { status, priority } = querySchema.parse(request.query);
+
+    // FILTRAR STATUS E PRIORIDADES
+
     const tasks = await prisma.tasks.findMany({
+      where: {
+        ...(status ? { status } : {}),
+        ...(priority ? { priority } : {}),
+      },
       include: {
         user: { select: { name: true, email: true } },
       },
     });
 
-    return response.json({ message: tasks }); // colocar tasks quand
+    return response.json({ message: tasks });
   }
 
   async delete(request: Request, response: Response) {

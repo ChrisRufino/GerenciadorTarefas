@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch --env-file .env src/server.ts",
-    "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll --runInBand"
+    "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll --runInBand",
+    "build": "tsup src --out-dir build",
+    "start": "node build/server.js"
   },
   "keywords": [],
   "author": "Christian Rufino",

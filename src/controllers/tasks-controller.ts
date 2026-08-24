@@ -38,10 +38,14 @@ class TasksController {
 
     // FILTRAR STATUS E PRIORIDADES
 
+    // se for membro, só pode ver as tarefas dele mesmo
+    const isMember = request.user?.role === "member";
+
     const tasks = await prisma.tasks.findMany({
       where: {
         ...(status ? { status } : {}),
         ...(priority ? { priority } : {}),
+        ...(isMember ? { assignedTo: Number(request.user?.id) } : {}),
       },
       include: {
         user: { select: { name: true, email: true } },
@@ -49,6 +53,28 @@ class TasksController {
     });
 
     return response.json({ message: tasks });
+  }
+
+  async assign(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.coerce.number().int(),
+    });
+
+    const bodySchema = z.object({
+      user_id: z.int(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+    const { user_id } = bodySchema.parse(request.body);
+
+    await prisma.tasks.update({
+      where: { id },
+      data: {
+        assignedTo: user_id,
+      },
+    });
+
+    return response.json();
   }
 
   async delete(request: Request, response: Response) {

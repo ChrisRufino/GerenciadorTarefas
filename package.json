@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "API para um sistema de Gerenciamento de Tarefas com Node.js. ",
   "main": "index.js",
+  "engines": {
+    "node": "<=18"
+  },
   "scripts": {
     "dev": "tsx watch --env-file .env src/server.ts",
     "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll --runInBand",
-    "build": "tsup src --out-dir build",
+    "build": "prisma generate && tsup src --out-dir build",
     "start": "node --env-file .env build/server.js"
   },
   "keywords": [],
